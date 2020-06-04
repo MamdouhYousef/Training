@@ -10,7 +10,7 @@ class new_module(models.Model):
     name = fields.Char()
     value = fields.Integer()
     value2 = fields.Float(compute="_value_pc", store=True)
-    description = fields.Text()
+    description = fields.Html()
     type = fields.Selection([
         ('type1', 'Type1'),
         ('type2', 'Type2'),
@@ -24,6 +24,13 @@ class new_module(models.Model):
     ], string="Status", default='draft')
     date = fields.Date()
     date_time = fields.Datetime()
+    file = fields.Binary('File')
+    employee_id = fields.Many2one('hr.employee', 'Employee')
+    employee_ids = fields.One2many('hr.employee', 'new_module_id',)
+    employee_m2m_ids = fields.Many2many('hr.employee', string='Employees M2M')
+    activate = fields.Boolean('Active')
+    total_other = fields.Float('Total')
+
 
     @api.onchange('type')
     def onchange_type(self):
@@ -42,19 +49,50 @@ class new_module(models.Model):
     def _value_pc(self):
         self.value2 = float(self.value) / 100
 
+    @api.one
+    def get_total(self):
+        other_records = self.search([('value', '>=', 1000),])
+        total = 0
+        for rec in other_records:
+            total = total + rec.value
+        self.total_other = total
+
     def action_confirm(self):
+        self.get_total()
         self.state = 'confirm'
 
     def action_refuse(self):
         self.state = 'refuse'
 
     def action_validate(self):
+        female_employees = self.env['hr.employee'].search([('gender', '=', 'female')])
+        total_childs = 0
+        for emp in female_employees:
+            total_childs += emp.children
+        self.total_other = total_childs
         self.state = 'validate'
 
     def action_reset(self):
         self.state = 'draft'
-        
+
+    @api.model
     def create(self, vals_list):
-        #do somthing
+        single_employees = self.env['hr.employee'].search([('marital','=','single')])
+        total = 0
+        for emp in single_employees:
+            total += emp.children
+            emp.children = False
         res = super(new_module, self).create(vals_list)
+        res.total_other = total
         return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(new_module, self).write(vals)
+        return res
+
+
+class Emlpoyee(models.Model):
+    _inherit = "hr.employee"
+
+    new_module_id = fields.Many2one('new_module.new_module', 'New Module')
