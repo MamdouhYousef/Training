@@ -30,7 +30,35 @@ class new_module(models.Model):
     employee_m2m_ids = fields.Many2many('hr.employee', string='Employees M2M')
     activate = fields.Boolean('Active')
     total_other = fields.Float('Total')
+    code = fields.Char('Code')
+    leave_count = fields.Integer('Leave count', compute='get_leave_count')
 
+    _sql_constraints = [
+        ('unique_name', 'unique(name)', 'Name should be unique'),
+    ]
+
+    @api.one
+    @api.depends('employee_id')
+    def get_leave_count(self):
+        leaves = self.env['hr.leave'].search([('employee_id','=', self.employee_id.id)])
+        count = len(leaves)
+        self.leave_count = count
+
+    @api.multi
+    def open_leave(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': "Leave",
+            'res_model': 'hr.leave',
+            'view_mode': 'tree,form',
+            'domain': [('employee_id','=', self.employee_id.id)],
+        }
+
+
+    @api.model
+    def get_report_data(self):
+        res = 9000
+        return res
 
     @api.onchange('type')
     def onchange_type(self):
@@ -84,6 +112,8 @@ class new_module(models.Model):
             emp.children = False
         res = super(new_module, self).create(vals_list)
         res.total_other = total
+        seq = self.env['ir.sequence'].next_by_code('new.module')
+        res.code = seq
         return res
 
     @api.multi
@@ -96,3 +126,5 @@ class Emlpoyee(models.Model):
     _inherit = "hr.employee"
 
     new_module_id = fields.Many2one('new_module.new_module', 'New Module')
+
+

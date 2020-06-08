@@ -1,0 +1,36 @@
+<odoo>
+    <data>
+
+        <record model="ir.module.category" id="module_new_module">
+            <field name="name">New moudule</field>
+            <field name="sequence">9</field>
+        </record>
+
+       <!-- New group-->
+        <record id="new_module_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
+            <field name="category_id" ref="module_new_module"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="new_module_officer" model="res.groups">
+            <field name="name">Officer</field>
+            <field name="implied_ids" eval="[(4, ref('new_module_user'))]"/>
+            <field name="category_id" ref="module_new_module"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+        <record id="new_module_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="implied_ids" eval="[(4, ref('new_module_officer'))]"/>
+            <field name="category_id" ref="module_new_module"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="new_module_refuse" model="res.groups">
+            <field name="name">New module refuse</field>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+    </data>
+</odoo>

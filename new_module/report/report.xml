@@ -1,0 +1,54 @@
+<odoo>
+    <data>
+
+
+        <report
+            id="new_module_print"
+            string="Print New template"
+            model="new_module.new_module"
+            report_type="qweb-pdf"
+            file="new_module.report_newmodule"
+            name="new_module.report_newmodule"
+        />
+
+
+        <template id="new_module.report_newmodule">
+            <t t-call="web.html_container">
+                <t t-call="web.internal_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page">
+                            <style>
+                                .border-table tr td{
+                                    border: 1px solid;
+                                    padding: 5px;
+                                }
+                            </style>
+                            <p style="text-align:center">
+                                Print Document
+                            </p>
+                            <table class="border-table" style="width:100%" >
+                                <tr>
+                                    <td>Name</td>
+                                    <td><span t-field="o.name"/></td>
+                                    <td>Value</td>
+                                    <td><span t-field="o.value"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Value2</td>
+                                    <td><span t-field="o.value2"/></td>
+                                    <td>Description</td>
+                                    <td><span t-field="o.description"/></td>
+                                </tr>
+                            </table>
+                            <p>
+                                Report data: <span t-esc="o.get_report_data()"/>
+                            </p>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+
+    </data>
+</odoo>

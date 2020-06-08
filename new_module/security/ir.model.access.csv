@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_new_module_new_module,new_module.new_module,model_new_module_new_module,,1,1,1,1
+access_new_module_admin,access_new_module_admin,model_new_module_new_module,base.group_erp_manager,1,1,1,1
+access_new_module_user,access_new_module_user,model_new_module_new_module,new_module_user,1,0,1,0
+access_officer,access_officer,model_new_module_new_module,new_module_officer,1,1,1,0
+access_manager,access_manager,model_new_module_new_module,new_module_manager,1,1,1,1

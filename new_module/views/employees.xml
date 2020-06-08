@@ -1,0 +1,37 @@
+<odoo>
+    <data>
+
+
+        <record model="ir.ui.view" id="Inherit_employee">
+            <field name="name">Inherit employee form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="identification_id" position="after">
+                    <field name="id_expiry_date"/>
+                    <field name="id_issue_date"/>
+                </field>
+                <field name="passport_id" position="after">
+                    <field name="passport_issue_date"/>
+                    <field name="passport_expiry_date"/>
+                </field>
+                <field name="additional_note" position="replace"/>
+                <field name="identification_id" position="attributes">
+                    <attribute name="string">National ID</attribute>
+                </field>
+                <field name="country_id" position="replace"/>
+                <field name="km_home_work" position="before">
+                    <field name="country_id"/>
+                </field>
+                <sheet position="before">
+                    <header>
+                        <button string="Confirm" name="action_confirm" type="object" states="draft"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                </sheet>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

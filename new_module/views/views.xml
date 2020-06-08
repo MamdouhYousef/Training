@@ -8,22 +8,32 @@
       <field name="arch" type="xml">
         <form>
           <header>
-                <button string="Confirm" name="action_confirm" type="object" states="draft" class="oe_highlight"/>
-                <button string="Validate" name="action_validate" type="object" states="confirm" class="oe_highlight"/>
-                <button string="refuse" name="action_refuse" type="object" states="draft,confirm"/>
+                <button string="Confirm" name="action_confirm" type="object" states="draft" class="oe_highlight"
+                        groups="new_module.new_module_officer"/>
+                <button string="Validate" name="action_validate" type="object" states="confirm" class="oe_highlight"
+                        groups="new_module.new_module_manager"/>
+                <button string="refuse" name="action_refuse" type="object" states="draft,confirm" groups="new_module.new_module_refuse"/>
                 <button string="SET TO DRAFT" name="action_reset" type="object" states="refuse"/>
                 <field name="state" widget="statusbar"/>
           </header>
           <sheet>
+            <div class="oe_button_box" name="button_box">
+
+                  <button class="oe_stat_button" type="object" name="open_leave" icon="fa-calendar">
+                           <field name="leave_count" string="Leave" widget="statinfo"/>
+                  </button>
+
+            </div>
             <group>
               <group>
+                <field name="code" readonly="1"/>
                 <field name="type"/>
                 <field name="name" attrs="{'invisible' : [('type','=', False)], 'required':[('type','!=', False)]}"/>
                 <field name="value"/>
                 <field name="file"/>
                 <field name="employee_id" options="{'no_open': True, 'no_create': True}" />
                 <field name="activate"/>
-                <field name="total_other" readonly="1"/>
+                <field name="total_other" readonly="1" groups="new_module.new_module_officer"/>
               </group>
               <group>
                 <field name="date" />
@@ -100,11 +110,11 @@
 
     <!-- Top menu item -->
 
-    <menuitem name="new_module" id="new_module.menu_root"/>
+    <menuitem name="New module" id="new_module.menu_root" groups="new_module_user"/>
 
     <!-- menu categories -->
 
-    <menuitem name="Menu 1" id="new_module.menu_1" parent="new_module.menu_root"/>
+    <menuitem name="Menu 1" id="new_module.menu_1" parent="new_module.menu_root" />
     <menuitem name="Menu 2" id="new_module.menu_2" parent="new_module.menu_root"/>
 
     <!-- actions -->
